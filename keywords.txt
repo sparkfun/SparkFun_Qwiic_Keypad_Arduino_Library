@@ -1,0 +1,31 @@
+#######################################
+# Syntax Coloring Map
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+KEYPAD	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+begin	        KEYWORD2
+
+setI2CAddress	KEYWORD2
+
+getVersion	    KEYWORD2
+
+getButton	KEYWORD2
+getTimeSincePressed	    KEYWORD2
+updateFIFO	    KEYWORD2
+
+isConnected	    KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+
+
