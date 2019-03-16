@@ -104,15 +104,6 @@ uint16_t KEYPAD::getTimeSincePressed()
   return timeSincePressed;
 }
 
-// "commands" keypad to plug in the next button into the registerMap
-// note, this actually sets the bit0 on the updateFIFO register
-void updateFIFO()
-{
-    writeRegister(KEYPAD_UPDATE_FIFO, 0x01); // set bit0, commanding keypad to update fifo
-    _i2cPort->end();
-    delay(100);
-}	
-
 //Returns a string of the firmware version number
 String KEYPAD::getVersion()
 {
@@ -155,3 +146,12 @@ boolean KEYPAD::writeRegister(uint8_t addr, uint8_t val)
 
   return (true);
 }
+
+// "commands" keypad to plug in the next button into the registerMap
+// note, this actually sets the bit0 on the updateFIFO register
+void KEYPAD::updateFIFO()
+{
+    writeRegister(KEYPAD_UPDATE_FIFO, 0x01); // set bit0, commanding keypad to update fifo
+    _i2cPort->end();
+    delay(100);
+}	
