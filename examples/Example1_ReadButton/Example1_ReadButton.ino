@@ -31,26 +31,33 @@ void setup(void)
 
   Serial.println("Press a button: * to do a space. # to go to next line.");
   keypad1.updateFIFO();
-      Serial.print(" Version: ");
-    Serial.println(keypad1.getVersion());
-  while(1);
+  Serial.print(" Version: ");
+  Serial.println(keypad1.getVersion());
 }
 
 void loop(void)
 {
-//  char button = readKeyPad();
-//
-//  if (button == -1)
-//  {
-//    Serial.println("No keypad detected");
-//    delay(1000);
-//  }
-//  else if (button != 0)
-//  {
-//    if (button == '#') Serial.println();
-//    else if (button == '*') Serial.print(" ");
-//    else Serial.print(button);
-//  }
+  delay(5000);
+  char button = keypad1.getButton();
+  Serial.print(" Button: ");
+  Serial.println(button);
+  delay(5000);
+  Serial.print("Commanding update fifo");
+  keypad1.updateFIFO();
+  
+  //  char button = readKeyPad();
+  //
+  //  if (button == -1)
+  //  {
+  //    Serial.println("No keypad detected");
+  //    delay(1000);
+  //  }
+  //  else if (button != 0)
+  //  {
+  //    if (button == '#') Serial.println();
+  //    else if (button == '*') Serial.print(" ");
+  //    else Serial.print(button);
+  //  }
 
   //Do something else. Don't call readKeyPad a ton otherwise you'll tie up the I2C bus
   delay(25); //25 is good, more is better
