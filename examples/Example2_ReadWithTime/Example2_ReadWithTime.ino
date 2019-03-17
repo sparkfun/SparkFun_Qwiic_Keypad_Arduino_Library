@@ -5,35 +5,51 @@
   Date: January 21st, 2018
   License: This code is public domain but you buy me a beer if you use this and we meet someday (Beerware license).
 
+  Updated by: Pete Lewis
+  SparkFun Electronics
+  Date: March 16th, 2019
+
   Feel like supporting our work? Buy a board from SparkFun!
   https://www.sparkfun.com/products/14641
 
   This example prints which button was pressed and when it was presed.
-  
-  Qwiic KeyPad records any button presses to a stack. If quered by the master KeyPad will
-  respond with the oldest button pressed along with the time since it was pressed.
+
+  Qwiic KeyPad records any button presses to a stack. It can remember up to 15 buttone presses.
+  The master I2C device (for example, an Uno) can ask for the oldest button pressed.
+  If the master continues to read in button presses, it will receive the entire stack (from oldest to newest).
+  This is handy if you need to go and do something else with your code, you can then come back to the
+  keypad and pull in the last 15 button presses.
 */
 
 #include <Wire.h>
-
-#define QWIIC_KEYPAD_ADDRESS 75 //75 is default, 74 if jumper is closed
+#include "SparkFun_Qwiic_Keypad_Arduino_Library.h" //Click here to get the library: http://librarymanager/All#SparkFun_keypad
+KEYPAD keypad1; //Create instance of this object
 
 char button = 0; //Button '0' to '9' and '*' and '#'
-unsigned long timeSincePress = 0; //Number of milliseconds since this button was pressed
+unsigned long timeSincePressed = 0; //Number of milliseconds since this button was pressed
 
 void setup(void)
 {
-  Wire.begin();
-  Wire.setClock(400000); //High speed I2C is supported!
-  
   Serial.begin(9600);
-  Serial.println("Read Qwiic KeyPad Example");
+  Serial.println("Qwiic KeyPad Example");
+
+  if (keypad1.begin() == false)
+  {
+    Serial.println("Keypad does not appear to be connected. Please check wiring. Freezing...");
+    while (1);
+  }
+  Serial.print("Initialized. Firmware Version: ");
+  Serial.println(keypad1.getVersion());
+  Serial.println("Press a button: * to do a space. # to go to next line.");
 }
 
 void loop(void)
 {
-  readKeyPad(); //Sets the button and timeSincePress global variables
-  if(button == -1)
+  keypad1.updateFIFO();  // necessary for keypad to pull button from stack to readable register
+  button = keypad1.getButton();
+  timeSincePressed = keypad1.getTimeSincePressed();
+
+  if (button == -1)
   {
     Serial.println("No keypad detected");
     delay(1000);
@@ -45,21 +61,9 @@ void loop(void)
   }
   else
   {
-    Serial.println("Button '" + String(button) + "' was pressed " + String(timeSincePress) + " milliseconds ago.");
+    Serial.println("Button '" + String(button) + "' was pressed " + String(timeSincePressed) + " milliseconds ago.");
   }
-  
-  //Do something else. Don't call readKeyPad a ton otherwise you'll tie up the I2C bus
+
+  //Do something else. Don't call your Keypad a ton otherwise you'll tie up the I2C bus
   delay(25); //25 is good, more is better
-  
 }
-
-//Get the latest button and time stamp from keypad
-void readKeyPad()
-{
-  Wire.requestFrom((uint8_t)QWIIC_KEYPAD_ADDRESS, (uint8_t)3); //Keypad responds with 3 bytes every time
-  
-  button = Wire.read();
-  timeSincePress = Wire.read() << 8; //Time is a 16 bit unsigned int. 65,535 is max (or 65.535 seconds)
-  timeSincePress |= Wire.read();
-}
-
