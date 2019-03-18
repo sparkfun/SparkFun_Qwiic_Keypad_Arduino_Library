@@ -1,84 +1,101 @@
 /*
-  An I2C based KeyPad
-  By: Nathan Seidle
-  SparkFun Electronics
-  Date: January 21st, 2018
-  License: This code is public domain but you buy me a beer if you use this and we meet someday (Beerware license).
+  This is a example written for the SparkFun Qwiic Keypad
+  SparkFun sells these at its website: www.sparkfun.com
+  Do you like this library? Help support SparkFun. Buy a board!
+  https://www.sparkfun.com/products/15168
 
-  Feel like supporting our work? Buy a board from SparkFun!
-  https://www.sparkfun.com/products/14641
+  Originally written by Wes Furuya @ SparkFun Electronics, February 5th, 2019
+  For the Qwiic Joystick.
+  Modified for Keypad by Pete Lewis @ SparkFun Electronics, March 17th, 2019
 
-  This example demonstrates how to change the I2C address via software.
+  The Qwiic Keypad is an I2C controlled ATTiny84-based 12 Button keypad.
+  
+  Example 3 - Change I2C Address and Read Firmware Version:
+  This program uses the Qwiic Keypad Arduino Library to change the I2C address
+  for the device. You enter in the DEC value (0-127) of the I2C address
+  and wait 1 second. 
 
-  Note: To change the address you can also open the on-board jumper. This will force the address to 74 (0x4A).
+  https://github.com/sparkfun/SparkFun_Qwiic_Keypad_Arduino_Library/examples
 
-  Note: If you change the address to something unknown you can either open the jumper (goes to address 0x4A) or
-  use the I2C scanner sketch (Example 4).
+  Development environment specifics:
+  Arduino IDE 1.8.8
+
+  Qwiic KeyPad records any button presses to a stack. It can remember up to 15 buttone presses.
+  The master I2C device (for example, an Uno) can ask for the oldest button pressed.
+  If the master continues to read in button presses, it will receive the entire stack (from oldest to newest).
+  This is handy if you need to go and do something else with your code, you can then come back to the
+  keypad and pull in the last 15 button presses.
+  
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include <Wire.h>
+#include "SparkFun_Qwiic_Keypad_Arduino_Library.h" //Click here to get the library: http://librarymanager/All#SparkFun_keypad
+KEYPAD keypad1; //Create instance of this object
 
-byte keypadAddress = 75; //75 is default, 74 if jumper is closed
-byte newAddress = 55; //Must be 0x08 <= newAddress <= 0x77
+uint8_t Address = 0x4B; //Start address (Default 0x4B)
+byte newAddress[5]; // used to store incoming new address from user via serial terminal
 
-void setup(void)
-{
-  Wire.begin();
-  
+void setup() {
   Serial.begin(9600);
-  Serial.println("Qwiic KeyPad Change Address Example");
-  Serial.println("Press a key to begin");
+  Serial.println("Qwiic Keypad Example 3 - Change I2C Address");
 
-  while(Serial.available()) Serial.read(); //Clear buffer
-  while(!Serial.available()) delay(1); //Wait for user to press button  
-
-  //The new address must be 0x08 <= address <= 0x77
-  if(changeKeyPadAddress(keypadAddress, newAddress) == true) //Old address, new address
+  if(keypad1.begin(Wire, Address) == false)
   {
-    keypadAddress = newAddress;
-    Serial.println("Address successfully changed to 0x" + String(keypadAddress, HEX));
+    Serial.println("Keypad does not appear to be connected. Please check wiring. Freezing...");
+    while(1);
+  }
+  else
+  {
+    Serial.print("Address: 0x");
+    Serial.print(Address, HEX);
+    Serial.print(" Version: ");
+    Serial.println(keypad1.getVersion());
   }
 }
 
-void loop(void)
-{
-  char button = readKeyPad();
+void loop() {
+    //Serial.println("I2C Range: 0-127");
+    Serial.println("INPUT- New I2C Address (DEC):");
+    Serial.flush(); //Clears buffer
+    while (Serial.available() == 0) delay(20); //Waits for entry
+    int len = Serial.readBytes(newAddress,5); //Takes entry as a stream of bytes
+    
+    //Serial.println(len);
+    //Serial.println(newAddress[0]);
+    //Serial.println(newAddress[1]);
+    //Serial.println(newAddress[2]);
 
-  if(button == -1)
-  {
-    Serial.println("No keypad detected");
-    delay(1000);
-  }
-  else if(button != 0)
-  {
-    if(button == '#') Serial.println();
-    else if(button == '*') Serial.print(" ");
-    else Serial.print(button);
-  }
+    //Converts ASCII char to DEC (Address)
+    if (len==1)
+    {
+    // Serial.println((byte)newAddress[0]-48, HEX);
+    Address = (byte)newAddress[0]-48;
+    }
+    else if (len==2)
+    {
+    // Serial.println(((byte)newAddress[0]-48)*10+((byte)newAddress[1]-48), HEX);
+    Address = ((byte)newAddress[0]-48)*10+((byte)newAddress[1]-48);
+    }
+    else if (len==3)
+    {
+    // Serial.println(((byte)newAddress[0]-48)*100+((byte)newAddress[1]-48)*10+((byte)newAddress[2]-48), HEX);
+    Address = ((byte)newAddress[0]-48)*100+((byte)newAddress[1]-48)*10+((byte)newAddress[2]-48);
+    }
 
-  //Do something else. Don't call readKeyPad a ton otherwise you'll tie up the I2C bus
-  delay(25); //25 is good, more is better
+    Serial.print("new address will be: ");
+    Serial.println(Address, HEX);
+    
+    keypad1.setI2CAddress(Address); //Sets new I2C address
+      
+    //Print out Firmware Version to double check address change
+    Serial.print(" Firmware: ");
+    Serial.println(keypad1.getVersion());
+
 }
-
-//Get the latest button
-char readKeyPad()
-{
-  Wire.requestFrom((uint8_t)keypadAddress, (uint8_t)1);
-  return(Wire.read());
-}
-
-//Change the I2C address from one address to another
-boolean changeKeyPadAddress(byte oldAddress, byte newAddress)
-{
-  Wire.beginTransmission(oldAddress); //Communicate using the old address
-  Wire.write(0xC7); //0xC7 is the register location on the KeyPad to change its I2C address
-  Wire.write(newAddress); //Go to the new address
-  if (Wire.endTransmission() != 0)
-  {
-    //Sensor did not ACK
-    Serial.println("Error: Sensor did not ack");
-    return(false);
-  }
-  return(true);
-}
-
