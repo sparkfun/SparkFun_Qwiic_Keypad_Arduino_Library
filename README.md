@@ -1,15 +1,19 @@
-SparkFun Qwiic Joystick Arduino Library
+SparkFun Qwiic Keypad Arduino Library
 ===========================================================
 
-![SparkFun Qwiic Joystick](https://cdn.sparkfun.com/assets/parts/1/3/5/5/8/15168-SparkFun_Qwiic_Joystick-01.jpg)
+![SparkFun Qwiic Keypad - 12 Button](https://cdn.sparkfun.com//assets/parts/1/3/1/0/6/14836-Qwiic_Keypad-01.jpg)
 
-[*SparkFun Qwiic Joystick (DEV-15168)*](https://www.sparkfun.com/products/15168)
+[*SparkFun Qwiic Keypad - 12 Button (DEV-15168)*](https://www.sparkfun.com/products/14836)
 
-Sometimes you need a joystick in your project. The Qwiic Joystick is a great solution with an analog joystick and momentary button. The Qwiic Joystick was designed to get rid of the large mass of wires that are needed to implement a joystick on a breadboard. The ATtiny85 on the Qwiic Joystick takes care reading the joystick position and if the button is pressed, while making that data readable over an easy-to-use I<sup>2</sup>C interface.
+Keypads are very handy input devices. And there are many great libraries written to interface to keypads! But who wants to tie up 7 GPIOs, have a handful of pull up resistors, and write firmware that scans the keys taking up valuable megahertz? Let's make it easier! The Qwiic Keypad monitors all 12 buttons and allows you to read in any button presses by simply reading a register over I2C. It also implements a stack with time stamps for each key press so you don't need to constantly poll the keypad. Qwiic Keypad even has a configurable I2C address so you can have multiple keypads on the same bus! 
 
-The joystick has a built in button so the user can select an GUI menu or element by pressing on the joystick. The current position of the joystick and state of the button are readable through the I2C registers. In the firmware, there is also a seperate register to check for button presses inbetween reads of the button state, which is cleared after each read (also with the read of the button state).
+With this convenient Arduino Library, you don't need to worry about I2C communication protocol or register addresses. "readButton()" and "readTimeSincePressed()" take care of all the I2C stuff, and simply return the data you want. Try out the examples in this library and you'll be up and running in no time.
 
-The I2C address of Qwiic Joystick is software configurable which means you can hookup over 100 on a single I2C bus!
+Qwiic Keypad is very low power and uses less than 4mA at 3.3V. There are jumpers on the board allowing the user to select between different I2C addresses as well as to remove the I2C pull up resistors if needed.
+
+The Qwiic Keypad comes fully assembled and uses the simple Qwiic interface. No soldering, no voltage translation, no figuring out which pin is SDA or SCL, just plug and go!
+
+The I2C address of Qwiic Keypad is software configurable which means you can hookup over 100 on a single I2C bus!
 
 Repository Contents
 -------------------
@@ -21,9 +25,9 @@ Repository Contents
 
 Documentation
 --------------
-* **[Qwiic Joystick Hookup Guide](https://learn.sparkfun.com/tutorials/qwiic-joystick-hoookup-guide)** - Hookup guide for the Qwiic Joystick
+* **[Qwiic Keypad Hookup Guide](https://learn.sparkfun.com/tutorials/qwiic-keypad-hoookup-guide)** - Hookup guide for the Qwiic Joystick
 * **[Installing an Arduino Library Guide](https://learn.sparkfun.com/tutorials/installing-an-arduino-library)** - Basic information on how to install an Arduino library.
-* **[Product Repository](https://github.com/sparkfun/Qwiic_Joystick)** - Main repository (including hardware files)
+* **[Product Repository](https://github.com/sparkfun/Qwiic_Keypad)** - Main repository (including firmware and hardware files)
 
 License Information
 -------------------
