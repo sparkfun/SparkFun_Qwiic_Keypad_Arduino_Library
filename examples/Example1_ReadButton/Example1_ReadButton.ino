@@ -30,7 +30,8 @@ void setup(void)
   Serial.begin(9600);
   Serial.println("Qwiic KeyPad Example");
 
-  if (keypad1.begin() == false)
+  if (keypad1.begin() == false) 	// Note, using begin() like this will use default I2C address, 0x4B. 
+									// You can pass begin() a different address like so: keypad1.begin(Wire, 0x4A).
   {
     Serial.println("Keypad does not appear to be connected. Please check wiring. Freezing...");
     while (1);
