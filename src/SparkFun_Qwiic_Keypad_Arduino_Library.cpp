@@ -152,6 +152,4 @@ boolean KEYPAD::writeRegister(uint8_t addr, uint8_t val)
 void KEYPAD::updateFIFO()
 {
     writeRegister(KEYPAD_UPDATE_FIFO, 0x01); // set bit0, commanding keypad to update fifo
-    _i2cPort->end();
-    delay(100);
 }	
