@@ -63,7 +63,7 @@ void loop(void)
     userIsActive = true; // used to only timeout when user is active
     if (checkEntry() == true)
     {
-      Serial.print("\n\r\n\rKeycode correct. Wahooooooooooo!!!!");
+      Serial.print("\n\r\n\rKeycode correct. Wahooooooooooo!");
       clearEntry();
       userIsActive = false; // don't display timeout stuff.
       delay(1000);
