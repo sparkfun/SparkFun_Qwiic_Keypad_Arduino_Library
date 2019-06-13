@@ -62,8 +62,7 @@ void KEYPAD::setI2CAddress(uint8_t newAddress)
   if (8 <= newAddress && newAddress <= 119)
   {
     writeRegister(KEYPAD_CHANGE_ADDRESS, newAddress);
-    _i2cPort->end();
-    delay(100);
+    delay(100); // allow time for slave device to write new address to EEPROM
 
     //Once the address is changed, we need to change it in the library
     _deviceAddress = newAddress;
