@@ -3,7 +3,7 @@ SparkFun Qwiic Keypad Arduino Library
 
 ![SparkFun Qwiic Keypad - 12 Button](https://cdn.sparkfun.com//assets/parts/1/3/1/0/6/14836-Qwiic_Keypad-01.jpg)
 
-[*SparkFun Qwiic Keypad - 12 Button (DEV-15168)*](https://www.sparkfun.com/products/14836)
+[*SparkFun Qwiic Keypad - 12 Button (COM-15290)*](https://www.sparkfun.com/products/15290)
 
 Keypads are very handy input devices. And there are many great libraries written to interface to keypads! But who wants to tie up 7 GPIOs, have a handful of pull up resistors, and write firmware that scans the keys taking up valuable megahertz? Let's make it easier! The Qwiic Keypad monitors all 12 buttons and allows you to read in any button presses by simply reading a register over I2C. It also implements a stack with time stamps for each key press so you don't need to constantly poll the keypad. Qwiic Keypad even has a configurable I2C address so you can have multiple keypads on the same bus! 
 
