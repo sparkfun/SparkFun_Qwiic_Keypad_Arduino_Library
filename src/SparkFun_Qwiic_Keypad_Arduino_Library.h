@@ -32,7 +32,7 @@
 #define QWIIC_KEYPAD_ADDR 0x4B //7-bit unshifted default I2C Address
 
 //Map to the various registers on the Keypad
-enum encoderRegisters {
+enum keypadRegisters {
   KEYPAD_ID = 0x00,
   KEYPAD_VERSION1, // 0x01
   KEYPAD_VERSION2, // 0x02
