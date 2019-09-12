@@ -26,7 +26,7 @@ Repository Contents
 Documentation
 --------------
 * **[Qwiic Keypad Hookup Guide](https://learn.sparkfun.com/tutorials/qwiic-keypad-hoookup-guide)** - Hookup guide for the Qwiic Joystick
-* **[Installing an Arduino Library Guide](https://learn.sparkfun.com/tutorials/installing-an-arduino-library)** - Basic information on how to install an Arduino library.
+* **[Qwiic Keypad Arduino Library](https://github.com/sparkfun/SparkFun_Qwiic_Keypad_Arduino_Library)** - Arduino library for Qwiic Keypad.
 * **[Product Repository](https://github.com/sparkfun/Qwiic_Keypad)** - Main repository (including firmware and hardware files)
 
 License Information
